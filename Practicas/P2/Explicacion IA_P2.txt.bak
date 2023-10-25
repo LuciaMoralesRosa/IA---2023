@@ -1,0 +1,80 @@
+Autor : Morales Rosa, Lucia (816906)
+Asignatura : Inteligencia Artificial
+Grado : Ingenieria Informatica
+
+Descripcion : Explicacion de la realizacion de la Practica_2
+
+---- Informacion proporcionada -----------------------------------------------------
+Entrega :
+	- ZIP
+		- Clases escritas o modificadas
+		- .pdf con la tabla y comentarios
+		
+Objetivo de la practica :
+	Realizar experimentos y recopilar información relevante de la búsqueda
+	relacionada con aspectos de eficiencia.
+	
+Tareas de la practica : 
+	- tabla con los resultados de las busquedas
+		- Incluir en las métricas el número de nodos generados
+	- Implementar una clase Biseccion en aima.core.util.math
+		- Permite obtener los ceros de la función N = b* (b*^d - 1) / (b* - 1)
+	- Generar 100 experimentos aleatorios de la profundidad deseada y calcular
+	  la media de los nodos generados
+		- Utilizar la clase GenerateInitialEightPuzzleBoard
+	- Reescribir ManhattanHeuristicFunction y MisplacedTilleHeuristicFunction
+	  para que ambas clases sean útiles para cualquier estado final
+		- Las heurísticas están pensadas para un único estado objetivo. En este
+		  problema tendrás que definir otra clase EightPuzzleGoalTest2 para poder
+		  modificar el estado objetivo y las heurísticas ManhattanHeuristicFunction2
+		  y MisplacedTilleHeuristicFunction2 que tengan en cuenta el estado
+		  objetivo definido
+		  
+Apunte : En la versión 1.8 hay que añadir la métrica de nodos generados en las
+	clases NodeExpander en aima.core.search.framework e IterativeDeepingingSearch.
+	Toma como modelo la métrica nodos expandidos. 
+
+---- Realizacion de la practica ----------------------------------------------------
+
+//Insercion de ficheros proporcionados
+Paso 1 : Insertar en aima.core.util.math el fichero Biseccion.java proporcionado.
+
+Paso 2 : Insertar en aima.gui.demo.search el fichero
+	GenerateInitialEightPuzzleBoard.java proporcionado.
+
+//EightPuzzleGoalTest2
+Paso 3 : Creacion del fihcero EightPuzzleGoalTest2.java en
+	aima.core.environment.eightpuzzle a partir del codigo de
+	EightPuzzleGoalTest.java.
+
+Paso 4 : Modificacion del fichero
+	- Se declara la variable goal como static para que sea compartida por todas
+	  las instancias de la clase
+	- Se añade el metodo setGoalState(EightPuzzleBoard board) que pondrá como
+	  estado objetivo el valor del board pasado por parametro
+	  
+//ManhattanHeuristicFunction2
+Paso 5 : Creacion del fichero ManhattanHeuristicFunction2 en 
+	aima.core.environment.eightpuzzle a partir del codigo proporcionado en
+	ManhattanHeuristicFunction.java
+	
+Paso 6 : Se define una variable "testObjetivo" de tipo EightPuzzleBoard que 
+	almacene el tablero objetivo.
+	
+Paso 7 : Se define una variable "locObjetivo" de tipo XYLocation donde se guarde
+	la localizacion del tablero objetivo.
+
+Paso 8 : Se modifica la funcion para que devuelva la distancia entre el tablero
+	objetivo y el actual.
+	- retVal += evaluateManhattanDistanceOf(locObjetivo, loc);
+
+Paso 9 : modificacion de la funcion evaluateManhattanDistanceOf para que el primer
+	argumento sea de tipo XYLocation y cumpla con la especificacion anterior:
+	public int evaluateManhattanDistanceOf(XYLocation locObjetivo, XYLocation loc)
+	{
+		int xpos = loc.getXCoOrdinate();
+		int ypos = loc.getYCoOrdinate();
+		int xposObjetivo = locObjetivo.getXCoOrdinate();
+		int yposObjetivo = locObjetivo.getYCoOrdinate();
+		return Math.abs(xpos - xposObjetivo) + Math.abs(ypos - yposObjetivo);
+	}

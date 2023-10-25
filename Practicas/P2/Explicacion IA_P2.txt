@@ -1,0 +1,127 @@
+Autor : Morales Rosa, Lucia (816906)
+Asignatura : Inteligencia Artificial
+Grado : Ingenieria Informatica
+
+Descripcion : Explicacion de la realizacion de la Practica_2
+
+---- Informacion proporcionada -----------------------------------------------------
+Entrega :
+	- ZIP
+		- Clases escritas o modificadas
+		- .pdf con la tabla y comentarios
+		
+Objetivo de la practica :
+	Realizar experimentos y recopilar información relevante de la búsqueda
+	relacionada con aspectos de eficiencia.
+	
+Tareas de la practica : 
+	- tabla con los resultados de las busquedas
+		- Incluir en las métricas el número de nodos generados
+	- Implementar una clase Biseccion en aima.core.util.math
+		- Permite obtener los ceros de la función N = b* (b*^d - 1) / (b* - 1)
+	- Generar 100 experimentos aleatorios de la profundidad deseada y calcular
+	  la media de los nodos generados
+		- Utilizar la clase GenerateInitialEightPuzzleBoard
+	- Reescribir ManhattanHeuristicFunction y MisplacedTilleHeuristicFunction
+	  para que ambas clases sean útiles para cualquier estado final
+		- Las heurísticas están pensadas para un único estado objetivo. En este
+		  problema tendrás que definir otra clase EightPuzzleGoalTest2 para poder
+		  modificar el estado objetivo y las heurísticas ManhattanHeuristicFunction2
+		  y MisplacedTilleHeuristicFunction2 que tengan en cuenta el estado
+		  objetivo definido
+		  
+Apunte : En la versión 1.8 hay que añadir la métrica de nodos generados en las
+	clases NodeExpander en aima.core.search.framework e IterativeDeepingingSearch.
+	Toma como modelo la métrica nodos expandidos. 
+
+---- Realizacion de la practica ----------------------------------------------------
+
+//Insercion de ficheros proporcionados
+Paso 1 : Insertar en aima.core.util.math el fichero Biseccion.java proporcionado.
+
+Paso 2 : Insertar en aima.gui.demo.search el fichero
+	GenerateInitialEightPuzzleBoard.java proporcionado.
+
+//EightPuzzleGoalTest2
+Paso 3 : Creacion del fihcero EightPuzzleGoalTest2.java en
+	aima.core.environment.eightpuzzle a partir del codigo de
+	EightPuzzleGoalTest.java.
+
+Paso 4 : Modificacion del fichero
+	- Se declara la variable goal como static para que sea compartida por todas
+	  las instancias de la clase
+	- Se añade el metodo setGoalState(EightPuzzleBoard board) que pondrá como
+	  estado objetivo el valor del board pasado por parametro
+	  
+//ManhattanHeuristicFunction2
+Paso 5 : Creacion del fichero ManhattanHeuristicFunction2.java en 
+	aima.core.environment.eightpuzzle a partir del codigo proporcionado en
+	ManhattanHeuristicFunction.java
+	
+Paso 6 : Se define una variable "testObjetivo" de tipo EightPuzzleBoard que 
+	almacene el tablero objetivo.
+	
+Paso 7 : Se define una variable "locObjetivo" de tipo XYLocation donde se guarde
+	la localizacion del tablero objetivo.
+
+Paso 8 : Se modifica la funcion para que devuelva la distancia entre el tablero
+	objetivo y el actual.
+	- retVal += evaluateManhattanDistanceOf(locObjetivo, loc);
+
+Paso 9 : modificacion de la funcion evaluateManhattanDistanceOf para que el primer
+	argumento sea de tipo XYLocation y cumpla con la especificacion anterior:
+	public int evaluateManhattanDistanceOf(XYLocation locObjetivo, XYLocation loc)
+	{
+		int xpos = loc.getXCoOrdinate();
+		int ypos = loc.getYCoOrdinate();
+		int xposObjetivo = locObjetivo.getXCoOrdinate();
+		int yposObjetivo = locObjetivo.getYCoOrdinate();
+		return Math.abs(xpos - xposObjetivo) + Math.abs(ypos - yposObjetivo);
+	}
+
+//MisplacedTilleHeuristicFunction2
+Paso 10 : Creacion del fichero MisplacedTilleHeuristicFunction2.java en 
+	aima.core.environment.eightpuzzle a partir del codigo proporcionado en
+	MisplacedTilleHeuristicFunction2
+
+Paso 11 :  Se define una variable "testObjetivo" de tipo EightPuzzleBoard que 
+	almacene el tablero objetivo.
+	- EightPuzzleBoard testObjetivo = (EightPuzzleBoard) EightPuzzleGoalTest2.goal;
+
+Paso 12 : Modificacion de la funcion getNumberOfMisplacedTiles(board) para que
+	la compare con el tablero objetivo.
+	
+//NodeExpander y IterativeDeepingingSearch
+Paso 13 : Modificacion de los ficheros para que funcione generatedNodes en EightPuzzlePrac2.java
+	- Se agrega lo equivalente para nodesGenerated a partir de lo que existe para nodesExpanded.
+
+//EightPuzzlePrac2
+Paso 14 : Realizar el fichero principal EightPuzzlePrac2.java
+	- Crear la cabecera con las dimensiones y estilo del guion.
+	- Crear dos blucles anidados para realizar los 100 experimentos para las 22 profundidades.
+	- Una vez en el bucle hay que comprobar que la profundidad es la correcta
+		- (i == getPathcost(agente_bfs))
+	- Si es correcto se van sumando los nodos generados en los 100 experimentos para cada algoritmo
+	- En el caso de IDS se limita a 10 por el alto coste que requiere.
+	- Fuera del segundo bucle se obtiene la media de nodos generados
+		- nodos_algoritmo = nodos_algoritmo / 100
+	- Se crea un nuevo objeto Biseccion b.
+	- Se le da el valor de la profundidad
+		- b.setDepth(i)
+	- Se pasa el numero de nodos generados por el algoritmo
+		- b.setGeneratedNodes(nodos_algoritmo)
+	- Se llama al metodo metodoBiseccion de la siguiente forma
+		- b_algoritmo = b.metodoDeBiseccion(1.00000001, 4.0, 1E-10)
+	* Recordatorio: para el algoritmo IDS solo se hace si i <= 10
+	- Se muestra en la tabla. Se puede usar el siguiente println:
+		- System.out.format("||%3s|| %7s |%7s |%7s |%7s ||%7.2f |%7.2f |%7.2f |%7.2f ||\n",
+					i, n_BFS, n_IDS, n_Ah1, n_Ah2, b_BFS, b_IDS, b_Ah1, b_Ah2);
+	- En caso de que sea i > 10, se usa el siguiente println:
+		- System.out.format("||%3s|| %7s |%7s |%7s |%7s ||%7.2f |%7s |%7.2f |%7.2f ||\n",
+				i, n_BFS, "----", n_Ah1, n_Ah2, b_BFS, "----", b_Ah1, b_Ah2);
+
+	- Se han creado las funciones getGeneratedNodes, getPathcost y getAgent
+		- int getGeneratedNodes(SearchAgent agente) -> Devuelve el numero de nodos generados para el agente dado
+		- int getPathcost(SearchAgent agente) -> Devuelve el pathcost para el agente dado
+		- SearchAgent getAgent(Search b, EightPuzzleBoard inicio, EightPuzzleBoard objetivo)
+			-> Devuelve el agente generado con los parametros introducidos
